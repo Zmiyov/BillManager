@@ -4,8 +4,14 @@
 //
 
 import Foundation
+import UserNotifications
 
 extension Bill {
+    
+    static let notificationCategoryID = "RemindNotification"
+    static let remindInAnHourActionID = "remindInAnHour"
+    static let markAsPaidAction = "markAsPaid"
+    
     var hasReminder: Bool {
         return (remindDate != nil)
     }
@@ -26,4 +32,29 @@ extension Bill {
         return dateString
     }
     
+    func schedule(date: Date, completion: @escaping (Bill) -> ()) {
+        
+    }
+    
+    func unschedule() {
+        
+    }
+    
+    private func authorizeIfNeeded(completion: @escaping (Bool) -> ()) {
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized:
+                completion(true)
+            case .notDetermined:
+                notificationCenter.requestAuthorization(options: [.sound, .badge, .alert]) { granted, _ in
+                    completion(granted)
+                }
+            case .denied, .provisional, .ephemeral:
+                completion(false)
+            @unknown default:
+                completion(false)
+            }
+        }
+    }
 }

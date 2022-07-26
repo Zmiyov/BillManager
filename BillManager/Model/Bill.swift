@@ -3,6 +3,7 @@
 import Foundation
 
 struct Bill: Codable {
+    
     let id: UUID
     var amount: Double?
     var dueDate: Date?

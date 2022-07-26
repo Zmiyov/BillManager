@@ -9,7 +9,12 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        let center = UNUserNotificationCenter.current()
+        let remindInAnHourAction = UNNotificationAction(identifier: Bill.notificationCategoryID, title: "In Hour", options: [])
+        let markAsPaidAction = UNNotificationAction(identifier: Bill.notificationCategoryID, title: "Mark", options: [.authenticationRequired])
+        let remindCategory = UNNotificationCategory(identifier: Bill.notificationCategoryID, actions: [remindInAnHourAction, markAsPaidAction], intentIdentifiers: [], options: [])
+        center.setNotificationCategories([remindCategory])
         
         return true
     }
