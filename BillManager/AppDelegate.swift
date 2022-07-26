@@ -11,10 +11,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let center = UNUserNotificationCenter.current()
-        let remindInAnHourAction = UNNotificationAction(identifier: Bill.notificationCategoryID, title: "In Hour", options: [])
-        let markAsPaidAction = UNNotificationAction(identifier: Bill.notificationCategoryID, title: "Mark", options: [.authenticationRequired])
+        let remindInAnHourAction = UNNotificationAction(identifier: Bill.remindInAnHourActionID, title: "In Hour", options: [])
+        let markAsPaidAction = UNNotificationAction(identifier: Bill.markAsPaidActionID, title: "Mark", options: [.authenticationRequired])
         let remindCategory = UNNotificationCategory(identifier: Bill.notificationCategoryID, actions: [remindInAnHourAction, markAsPaidAction], intentIdentifiers: [], options: [])
         center.setNotificationCategories([remindCategory])
+        center.delegate = self
         
         return true
     }

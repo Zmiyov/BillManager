@@ -10,7 +10,7 @@ extension Bill {
     
     static let notificationCategoryID = "RemindNotification"
     static let remindInAnHourActionID = "remindInAnHour"
-    static let markAsPaidAction = "markAsPaid"
+    static let markAsPaidActionID = "markAsPaid"
     
     var hasReminder: Bool {
         return (remindDate != nil)
@@ -36,8 +36,12 @@ extension Bill {
         
     }
     
-    func unschedule() {
-        
+    mutating func unschedule() {
+        if let notificationID = notificationID {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationID])
+        }
+        notificationID = nil
+        remindDate = nil
     }
     
     private func authorizeIfNeeded(completion: @escaping (Bool) -> ()) {
