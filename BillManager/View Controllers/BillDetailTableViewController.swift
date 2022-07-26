@@ -199,6 +199,15 @@ class BillDetailTableViewController: UITableViewController, UITextFieldDelegate 
             return true
         }
     }
+    
+    func presentNeedAuthorizationAlert() {
+        let title = "Authorization Alert"
+        let message = ""
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         var bill = self.bill ?? Database.shared.addBill()
@@ -210,8 +219,14 @@ class BillDetailTableViewController: UITableViewController, UITextFieldDelegate 
         
         if remindSwitch.isOn {
             bill.remindDate = remindDatePicker.date
+            bill.schedule(date: remindDatePicker.date) { bill in
+                if bill.notificationID == nil {
+                    self.presentNeedAuthorizationAlert()
+                }
+            }
         } else {
             bill.remindDate = nil
+            bill.unschedule()
         }
         
         Database.shared.updateAndSave(bill)

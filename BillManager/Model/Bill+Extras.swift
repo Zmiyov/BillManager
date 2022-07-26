@@ -45,6 +45,7 @@ extension Bill {
                 
                 return
             }
+            
             let content = UNMutableNotificationContent()
             content.title = "Bill Reminder"
             content.body = "$\(amount) due to \(payee) on \(formattedDueDate)"
