@@ -12,6 +12,7 @@ extension Bill {
     static let remindInAnHourActionID = "remindInAnHour"
     static let markAsPaidActionID = "markAsPaid"
     
+    
     var hasReminder: Bool {
         return (remindDate != nil)
     }
@@ -33,6 +34,39 @@ extension Bill {
     }
     
     func schedule(date: Date, completion: @escaping (Bill) -> ()) {
+        var updateBill = self
+        updateBill.unschedule()
+        
+        authorizeIfNeeded { (granted) in
+            guard granted else  {
+                DispatchQueue.main.async {
+                    completion(updateBill)
+                }
+                
+                return
+            }
+            let content = UNMutableNotificationContent()
+            content.title = "Bill Reminder"
+            content.body = "$\(amount) due to \(payee) on \(formattedDueDate)"
+            content.categoryIdentifier = Bill.notificationCategoryID
+            
+            let triggerDateComponents = Calendar.current.dateComponents([.minute, .hour, .day, .month, .year], from: date)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDateComponents, repeats: false)
+            let newID = UUID().uuidString
+            let request = UNNotificationRequest(identifier: newID, content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) {
+                (error: Error?) in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+                    updateBill.notificationID = newID
+                    updateBill.remindDate = date
+                    completion(updateBill)
+                }
+            }
+        }
         
     }
     
