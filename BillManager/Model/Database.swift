@@ -85,6 +85,11 @@ class Database {
         return _billsLookup[id]
     }
     
+    func getBill(for notificationID: String) -> Bill? {
+        let uuidFromString = UUID(uuidString: notificationID)!
+        return _billsLookup[uuidFromString]
+    }
+    
 }
 
 extension Bill: Comparable {

@@ -48,7 +48,7 @@ extension Bill {
             
             let content = UNMutableNotificationContent()
             content.title = "Bill Reminder"
-            content.body = "$\(amount) due to \(payee) on \(formattedDueDate)"
+            content.body = "$\(amount!) due to \(payee!) on \(formattedDueDate)"
             content.categoryIdentifier = Bill.notificationCategoryID
             
             let triggerDateComponents = Calendar.current.dateComponents([.minute, .hour, .day, .month, .year], from: date)
@@ -72,11 +72,11 @@ extension Bill {
     }
     
     mutating func unschedule() {
-        if let notificationID = notificationID {
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationID])
-        }
-        notificationID = nil
-        remindDate = nil
+        guard let notificationID = notificationID else { return }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationID])
+        
+        self.notificationID = nil
+        self.remindDate = nil
     }
     
     private func authorizeIfNeeded(completion: @escaping (Bool) -> ()) {

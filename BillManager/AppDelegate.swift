@@ -8,6 +8,34 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let notificationID = response.notification.request.identifier
+        print(notificationID)
+        var bill = Database().getBill(for: notificationID)
+        print(bill?.remindDate)
+        
+        if response.actionIdentifier == Bill.remindInAnHourActionID {
+            let snoozeDate = Date().addingTimeInterval(60 * 60)
+            bill?.schedule(date: snoozeDate, completion: { bill in
+                Database.shared.updateAndSave(bill)
+            })
+            print(Bill.remindInAnHourActionID)
+            print(Date())
+            print(snoozeDate)
+            
+        } else if response.actionIdentifier == Bill.markAsPaidActionID {
+            bill?.paidDate = Date()
+//            Database.shared.updateAndSave(bill!)
+            print(Bill.markAsPaidActionID)
+        }
+        completionHandler()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.sound, .banner, .list])
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let center = UNUserNotificationCenter.current()
