@@ -12,7 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let notificationID = response.notification.request.identifier
         print(notificationID)
-        var bill = Database().getBill(for: notificationID)
+        var bill = Database.shared.getBill(for: notificationID)
         print(bill?.remindDate)
         
         if response.actionIdentifier == Bill.remindInAnHourActionID {

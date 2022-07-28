@@ -218,19 +218,22 @@ class BillDetailTableViewController: UITableViewController, UITextFieldDelegate 
         bill.paidDate = paidDate
         
         if remindSwitch.isOn {
-            bill.remindDate = remindDatePicker.date
+//            bill.remindDate = remindDatePicker.date
+            
+            bill.schedule(date: remindDatePicker.date) { bill in
+                Database.shared.updateAndSave(bill)
+            }
+            
             if bill.notificationID == nil {
                 self.presentNeedAuthorizationAlert()
             }
             
         } else {
-            bill.remindDate = nil
+//            bill.remindDate = nil
             bill.unschedule()
         }
         
-        bill.schedule(date: remindDatePicker.date) { bill in
-            Database.shared.updateAndSave(bill)
-        }
+
         
     }
     

@@ -14,6 +14,7 @@ struct Bill: Codable {
     
     init(id: UUID = UUID()) {
         self.id = id
+//        self.notificationID = notificationID ?? UUID().uuidString
     }
 }
 
