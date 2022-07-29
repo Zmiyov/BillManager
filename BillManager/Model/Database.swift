@@ -86,9 +86,18 @@ class Database {
     }
     
     func getBill(for notificationID: String) -> Bill? {
-        let uuidFromString = UUID(uuidString: notificationID)!
-        return _billsLookup[uuidFromString]
+        
+        let result = bills.first { bill in
+            return bill.notificationID == notificationID
+        }
+        return result
     }
+    
+//    func getBill(for notificationID: String) -> Bill? {
+//
+//        bills.first { $0.notificationID == notificationID }
+//
+//    }
     
 }
 

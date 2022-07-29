@@ -53,6 +53,7 @@ extension Bill {
             let triggerDateComponents = Calendar.current.dateComponents([.minute, .hour, .day, .month, .year], from: date)
             let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDateComponents, repeats: false)
             let newID = UUID().uuidString
+//            self.notificationID = newID
             let request = UNNotificationRequest(identifier: newID, content: content, trigger: trigger)
             
             UNUserNotificationCenter.current().add(request) {
@@ -67,7 +68,6 @@ extension Bill {
                 }
             }
         }
-        
     }
     
     mutating func unschedule() {
